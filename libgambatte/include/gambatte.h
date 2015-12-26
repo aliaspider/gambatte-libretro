@@ -115,14 +115,15 @@ public:
 
    void clearCheats();
 
-private:
 	struct Priv;
 	Priv *const p_;
+private:
 
 	void loadState(const std::string &filepath, bool osdMessage);
 	GB(const GB &);
 	GB & operator=(const GB &);
 };
+
 }
 
 #endif

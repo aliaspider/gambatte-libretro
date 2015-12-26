@@ -112,9 +112,10 @@ public:
 
    int loadROM(const void *romdata, unsigned romsize, const bool forceDmg, const bool multicartCompat);
 
-private:
+
 	Cartridge cart_;
-	unsigned char ioamhram_[0x200];
+private:
+   unsigned char ioamhram_[0x200];
 	InputGetter *getInput_;
 	unsigned long divLastUpdate_;
 	unsigned long lastOamDmaUpdate_;

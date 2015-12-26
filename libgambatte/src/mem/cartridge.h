@@ -141,6 +141,7 @@ namespace gambatte
          void *rtcdata_ptr();
          unsigned rtcdata_size();
 
+         MemPtrs memptrs_;
       private:
          struct AddrData
          {
@@ -149,8 +150,7 @@ namespace gambatte
             AddrData(unsigned long addr, unsigned data) : addr(addr), data(data)
             {
             }
-         };
-         MemPtrs memptrs_;
+         };         
          Rtc rtc_;
 
          std::auto_ptr<Mbc> mbc;

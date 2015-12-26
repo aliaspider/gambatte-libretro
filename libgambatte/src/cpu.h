@@ -91,6 +91,16 @@ private:
 	void process(unsigned long cycles);
 };
 
+struct GB::Priv {
+   CPU cpu;
+   int stateNo;
+   bool gbaCgbMode;
+
+   Priv() : stateNo(1), gbaCgbMode(false) {}
+
+   void on_load_succeeded(unsigned flags);
+};
+
 }
 
 #endif

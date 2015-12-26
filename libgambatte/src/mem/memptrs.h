@@ -130,6 +130,7 @@ namespace gambatte
          void setWrambank(unsigned bank);
          void setOamDmaSrc(OamDmaSrc oamDmaSrc);
 
+         unsigned char *memchunk_;
       private:
          unsigned char *romdata_[2];
          unsigned char *wramdata_[2];
@@ -137,8 +138,7 @@ namespace gambatte
          unsigned char *wmem_[0x10];
          unsigned char *vrambankptr_;
          unsigned char *rsrambankptr_;
-         unsigned char *wsrambankptr_;
-         unsigned char *memchunk_;
+         unsigned char *wsrambankptr_;         
          unsigned char *rambankdata_;
          unsigned char *wramdataend_;
          OamDmaSrc oamDmaSrc_;

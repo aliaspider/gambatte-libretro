@@ -1,6 +1,7 @@
 #include "libretro.h"
 #include "blipper.h"
 #include <gambatte.h>
+#include <cpu.h>
 #include "gbcpalettes.h"
 
 #include <assert.h>
@@ -70,7 +71,7 @@ static struct retro_system_timing g_timing;
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
-   retro_game_geometry geom = { 160, 144, 160, 144 };
+   retro_game_geometry geom = { 256, 512, 256, 512 };
    info->geometry = geom;
    info->timing   = g_timing;
 }
@@ -119,10 +120,10 @@ void retro_init(void)
 
 #ifdef _3DS
    video_buf = (gambatte::video_pixel_t*)
-               linearMemAlign(256 * 144 * sizeof(gambatte::video_pixel_t), 128);
+               linearMemAlign(256 * 512 * sizeof(gambatte::video_pixel_t), 128);
 #else
    video_buf = (gambatte::video_pixel_t*)
-               malloc(256 * 144 * sizeof(gambatte::video_pixel_t));
+               malloc(256 * 512 * sizeof(gambatte::video_pixel_t));
 #endif
    video_pitch = 256;
 
@@ -601,16 +602,16 @@ void retro_run()
    input_poll_cb();
 
    uint64_t expected_frames = samples_count / 35112;
-   if (frames_count < expected_frames) // Detect frame dupes.
-   {
-#ifdef VIDEO_RGB565
-      video_cb(0, 160, 144, 512);
-#else
-      video_cb(0, 160, 144, 1024);
-#endif
-      frames_count++;
-      return;
-   }
+//   if (frames_count < expected_frames) // Detect frame dupes.
+//   {
+//#ifdef VIDEO_RGB565
+//      video_cb(0, 256, 512, 512);
+//#else
+//      video_cb(0, 256, 512, 1024);
+//#endif
+//      frames_count++;
+//      return;
+//   }
 
    union
    {
@@ -647,10 +648,13 @@ void retro_run()
    render_audio(sound_buf.i16, samples);
 #endif
 
+   memcpy(&video_buf[160*256], gb.p_->cpu.mem_.cart_.memptrs_.memchunk_ + 0x4000, 0x20000);
+//   memcpy(&video_buf[0], gb.p_->cpu.mem_.cart_.memptrs_.memchunk_ + 0x4000, 0x20000);
+
 #ifdef VIDEO_RGB565
-   video_cb(video_buf, 160, 144, 512);
+   video_cb(video_buf, 256, 512, 512);
 #else
-   video_cb(video_buf, 160, 144, 1024);
+   video_cb(video_buf, 256, 512, 1024);
 #endif
 
 
