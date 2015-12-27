@@ -648,7 +648,7 @@ void retro_run()
    render_audio(sound_buf.i16, samples);
 #endif
 
-   memcpy(&video_buf[160*256], gb.p_->cpu.mem_.cart_.memptrs_.memchunk_ + 0x4000, 0x20000);
+   memcpy(&video_buf[160*256], gb.p_->cpu.mem_.cart_.memptrs_.memchunk_ + 0x4000, 0x10000);
 //   memcpy(&video_buf[0], gb.p_->cpu.mem_.cart_.memptrs_.memchunk_ + 0x4000, 0x20000);
 
 #ifdef VIDEO_RGB565
