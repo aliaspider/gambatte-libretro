@@ -594,6 +594,66 @@ static void render_audio(const int16_t *samples, unsigned frames)
    blipper_push_samples(resampler_r, samples + 1, frames, 2);
 }
 
+
+uint16_t gbemu_palette[] = {0xFFFF,0x14|0x2A<<6|0x14<<11,
+                            0xA|0x15<<6|0xA<<11,0x0000,};
+
+static void gbemu_draw_tile(uint8_t* tile, uint16_t* frame, int stride)
+{
+   int i,j;
+   for (i=0; i<8; i++)
+   {
+      uint8_t bp0 = *tile++;
+      uint8_t bp1 = *tile++;
+      for (j=0; j<8; j++)
+      {
+         int id = ((bp0 >> 7) & 0x1) | ((bp1 >> 6) & 0x2);
+         bp0<<=1;
+         bp1<<=1;
+         *frame= gbemu_palette[id];
+         *frame++;
+      }
+      frame += stride - 8;
+   }
+
+}
+
+
+void gbemu_draw_tilemap(void)
+{
+   int i;
+   memset(&video_buf[256*256], 0x0, 256*256 * sizeof(uint16_t));
+//   memcpy(gbemu_tilemap_frame, GB.VRAM, 0x2000);
+//   memcpy(gbemu_tilemap_frame + 0x1000, GB.WRAM, 0x2000);
+//   return;
+
+   uint8_t* start_ptr = gb.p_->cpu.mem_.cart_.memptrs_.memchunk_ + 0x10000 -0x4000;
+//   uint8_t* start_ptr = gb.p_->cpu.mem_.cart_.memptrs_.vrambankptr_+0x4000;
+   uint8_t* ptr = start_ptr;
+   uint16_t* dst = (uint16_t*)&video_buf[256*256];
+   i = 0;
+   while (ptr < &start_ptr[0x2000])
+   {
+      gbemu_draw_tile(ptr, dst, 256);
+      ptr+= 16;
+      dst += 8;
+      i++;
+#if 0
+      if(i==32)
+      {
+         dst += 7 * 256;
+         i=0;
+      }
+#else
+      if(i==16)
+      {
+         dst += 15 * 128;
+         i=0;
+      }
+#endif
+   }
+
+}
 void retro_run()
 {
    static uint64_t samples_count = 0;
@@ -650,6 +710,8 @@ void retro_run()
 
    memcpy(&video_buf[160*256], gb.p_->cpu.mem_.cart_.memptrs_.memchunk_ + 0x4000, 0x10000);
 //   memcpy(&video_buf[0], gb.p_->cpu.mem_.cart_.memptrs_.memchunk_ + 0x4000, 0x20000);
+
+   gbemu_draw_tilemap();
 
 #ifdef VIDEO_RGB565
    video_cb(video_buf, 256, 512, 512);

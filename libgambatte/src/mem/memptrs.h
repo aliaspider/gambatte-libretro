@@ -131,15 +131,15 @@ namespace gambatte
          void setOamDmaSrc(OamDmaSrc oamDmaSrc);
 
          unsigned char *memchunk_;
+         unsigned char *rambankdata_;
+         unsigned char *vrambankptr_;
       private:
          unsigned char *romdata_[2];
          unsigned char *wramdata_[2];
          const unsigned char *rmem_[0x10];
-         unsigned char *wmem_[0x10];
-         unsigned char *vrambankptr_;
+         unsigned char *wmem_[0x10];         
          unsigned char *rsrambankptr_;
-         unsigned char *wsrambankptr_;         
-         unsigned char *rambankdata_;
+         unsigned char *wsrambankptr_;                  
          unsigned char *wramdataend_;
          OamDmaSrc oamDmaSrc_;
          MemPtrs(const MemPtrs &);
